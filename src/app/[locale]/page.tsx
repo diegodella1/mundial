@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import AuthButton from "@/components/auth/AuthButton";
 
 export default function HomePage() {
   const t = useTranslations("common");
@@ -12,8 +13,8 @@ export default function HomePage() {
         <p className="mt-4 text-xl text-zinc-400">
           {t("tagline")}
         </p>
-        <div className="mt-8 rounded-full bg-zinc-800/50 px-6 py-3 text-sm text-zinc-500">
-          {t("comingSoon")}
+        <div className="mt-8">
+          <AuthButton />
         </div>
       </div>
     </main>
