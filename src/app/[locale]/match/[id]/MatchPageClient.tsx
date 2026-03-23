@@ -81,7 +81,7 @@ export default function MatchPageClient({
       </div>
 
       <div className="mt-6 space-y-6">
-        {isLoggedIn && !teamCode && (
+        {!teamCode && (
           <TeamSelector
             matchId={match.id}
             homeTeam={match.home_team}
@@ -128,7 +128,7 @@ export default function MatchPageClient({
               onReactionSuccess={handleReactionSuccess}
             />
           ) : (
-            <ChatBox matchId={match.id} chatEnabled={chatEnabled} />
+            <ChatBox matchId={match.id} chatEnabled={chatEnabled} isLoggedIn={isLoggedIn} />
           )}
         </div>
       </div>

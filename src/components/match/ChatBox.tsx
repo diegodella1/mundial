@@ -17,6 +17,7 @@ interface ChatMessage {
 interface ChatBoxProps {
   matchId: string;
   chatEnabled: boolean;
+  isLoggedIn?: boolean;
 }
 
 function timeAgo(dateStr: string): string {
@@ -52,7 +53,7 @@ function nameToColor(name: string): string {
   return colors[Math.abs(hash) % colors.length];
 }
 
-export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
+export default function ChatBox({ matchId, chatEnabled, isLoggedIn = false }: ChatBoxProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -256,49 +257,67 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
       </div>
 
       {/* Input area */}
-      <div className="flex items-center gap-2 border-t border-zinc-800 p-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSend();
-            }
-          }}
-          maxLength={280}
-          placeholder="Escribe un mensaje..."
-          className="flex-1 rounded-lg bg-zinc-800 border border-zinc-700/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30"
-        />
-        <button
-          onClick={handleSend}
-          disabled={!input.trim() || sending || cooldown}
-          className={`flex-shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-            !input.trim() || sending || cooldown
-              ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
-              : "bg-white text-zinc-900 hover:bg-zinc-100"
-          }`}
-        >
-          {cooldown ? (
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-zinc-600 border-t-transparent" />
-          ) : (
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-              />
-            </svg>
-          )}
-        </button>
-      </div>
+      {!isLoggedIn ? (
+        <div className="flex items-center justify-center gap-2 border-t border-zinc-800 p-3">
+          <span className="text-sm text-zinc-500">Iniciá sesión para chatear</span>
+          <button
+            onClick={() => {
+              const supabaseClient = createClient();
+              supabaseClient.auth.signInWithOAuth({
+                provider: "google",
+                options: { redirectTo: window.location.origin + "/api/auth/callback" },
+              });
+            }}
+            className="rounded-lg bg-white text-zinc-900 px-3 py-1.5 text-xs font-semibold hover:bg-zinc-100 transition-colors"
+          >
+            Iniciar sesión
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 border-t border-zinc-800 p-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            maxLength={280}
+            placeholder="Escribe un mensaje..."
+            className="flex-1 rounded-lg bg-zinc-800 border border-zinc-700/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30"
+          />
+          <button
+            onClick={handleSend}
+            disabled={!input.trim() || sending || cooldown}
+            className={`flex-shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              !input.trim() || sending || cooldown
+                ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+                : "bg-white text-zinc-900 hover:bg-zinc-100"
+            }`}
+          >
+            {cooldown ? (
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-zinc-600 border-t-transparent" />
+            ) : (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
