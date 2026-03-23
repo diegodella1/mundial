@@ -1,25 +1,46 @@
-export default function AdminDashboardPage() {
-  const stats = [
-    { label: "Usuarios activos", value: "—" },
-    { label: "Reacciones totales", value: "—" },
-    { label: "Partidos en vivo", value: "—" },
-  ];
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import DashboardClient from "./DashboardClient";
+
+export default async function AdminDashboardPage() {
+  // Total reactions
+  const { count: totalReactions } = await supabaseAdmin
+    .from("reactions")
+    .select("*", { count: "exact", head: true });
+
+  // Live matches
+  const { count: liveMatches } = await supabaseAdmin
+    .from("matches")
+    .select("*", { count: "exact", head: true })
+    .in("status", ["live", "halftime"]);
+
+  // Total users
+  const { count: totalUsers } = await supabaseAdmin
+    .from("profiles")
+    .select("*", { count: "exact", head: true });
+
+  // Recent reactions (last 24h)
+  const twentyFourHoursAgo = new Date(
+    Date.now() - 24 * 60 * 60 * 1000
+  ).toISOString();
+  const { count: recentReactions } = await supabaseAdmin
+    .from("reactions")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", twentyFourHoursAgo);
+
+  // Finished matches for receipt generation
+  const { data: finishedMatches } = await supabaseAdmin
+    .from("matches")
+    .select("id, home_team, away_team, home_code, away_code, home_score, away_score, kickoff_at")
+    .eq("status", "finished")
+    .order("kickoff_at", { ascending: false });
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl bg-zinc-800 p-6"
-          >
-            <p className="text-sm text-zinc-400">{stat.label}</p>
-            <p className="mt-2 text-3xl font-bold text-white">{stat.value}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <DashboardClient
+      totalReactions={totalReactions ?? 0}
+      liveMatches={liveMatches ?? 0}
+      totalUsers={totalUsers ?? 0}
+      recentReactions={recentReactions ?? 0}
+      finishedMatches={finishedMatches ?? []}
+    />
   );
 }

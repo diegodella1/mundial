@@ -7,7 +7,7 @@ import { useState } from "react";
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin" },
   { label: "Partidos", href: "/admin/matches" },
-  { label: "Reacciones", href: "/admin/reactions" },
+  { label: "Reacciones", href: "/admin/reactions-config" },
   { label: "Moderación", href: "/admin/moderation" },
   { label: "Sponsors", href: "/admin/sponsors" },
   { label: "Media Kit", href: "/admin/media-kit" },
