@@ -12,7 +12,9 @@
     "live": "EN VIVO",
     "upcoming": "PRÓXIMOS",
     "finished": "FINALIZADOS",
-    "noMatches": "No hay partidos programados"
+    "noMatches": "No hay partidos programados",
+    "matches": "partidos",
+    "final": "FINAL"
   },
   "match": {
     "chooseTeam": "¿A quién apoyás?",

@@ -12,7 +12,9 @@
     "live": "LIVE",
     "upcoming": "UPCOMING",
     "finished": "FINISHED",
-    "noMatches": "No matches scheduled"
+    "noMatches": "No matches scheduled",
+    "matches": "matches",
+    "final": "FINAL"
   },
   "match": {
     "chooseTeam": "Who are you supporting?",

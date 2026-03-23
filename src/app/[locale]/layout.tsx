@@ -4,6 +4,8 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
+import NavBar from "@/components/layout/NavBar";
+import MapBackground from "@/components/layout/MapBackground";
 
 export const metadata: Metadata = {
   title: "Matchfeel — Mundial 2026",
@@ -29,7 +31,16 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className="min-h-screen bg-zinc-950 text-white antialiased">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          {/* World map fixed background */}
+          <MapBackground />
+
+          {/* Top navigation */}
+          <NavBar />
+
+          {/* Page content */}
+          <main className="relative z-10">
+            {children}
+          </main>
         </NextIntlClientProvider>
       </body>
     </html>
