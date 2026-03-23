@@ -114,7 +114,8 @@
     "halftime": "Entretiempo",
     "finished": "Finalizado",
     "postponed": "Pospuesto",
-    "matchCount": "{count} partidos"
+    "matchCount": "{count} partidos",
+    "whoDoYouSupport": "¿Por quién hinchás?"
   },
   "profile": {
     "reactions": "Reacciones",

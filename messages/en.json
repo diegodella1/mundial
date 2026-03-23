@@ -114,7 +114,8 @@
     "halftime": "Halftime",
     "finished": "Finished",
     "postponed": "Postponed",
-    "matchCount": "{count} matches"
+    "matchCount": "{count} matches",
+    "whoDoYouSupport": "Who do you support?"
   },
   "profile": {
     "reactions": "Reactions",

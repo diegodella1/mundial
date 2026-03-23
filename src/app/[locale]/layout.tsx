@@ -39,7 +39,7 @@ export default async function LocaleLayout({
       <body className="min-h-screen bg-zinc-950 text-white antialiased">
         <NextIntlClientProvider messages={messages}>
           {/* World map fixed background */}
-          <MapBackground />
+          <MapBackground demo />
 
           {/* Top navigation */}
           <NavBar />

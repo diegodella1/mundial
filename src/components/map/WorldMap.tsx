@@ -4,14 +4,14 @@ import { MAP_PATHS } from "./map-data";
 
 // Color scales for intensity layer (low to high activity)
 const HEAT_COLORS = [
-  "#1a1a2e", // 0 - inactive (dark)
-  "#16213e", // very low
-  "#0f3460", // low
-  "#1a5276", // medium-low
-  "#1e8449", // medium
-  "#f39c12", // medium-high
-  "#e74c3c", // high
-  "#c0392b", // very high
+  "#1e293b", // 0 - inactive (slate-800 — visible!)
+  "#1e3a5f", // very low
+  "#0f4c75", // low
+  "#1a7a4c", // medium-low
+  "#22c55e", // medium — green
+  "#eab308", // medium-high — yellow
+  "#f97316", // high — orange
+  "#ef4444", // very high — red
 ];
 
 // Color mapping per reaction emoji for sentiment layer
@@ -34,10 +34,22 @@ interface MapState {
 interface WorldMapProps {
   mapState?: MapState;
   layer?: "intensity" | "sentiment";
+  demo?: boolean;
 }
 
-export default function WorldMap({ mapState, layer = "intensity" }: WorldMapProps) {
+// Countries that participate in the World Cup 2026 — used for demo
+const DEMO_COUNTRIES = [
+  "MX", "ZA", "KR", "CA", "CH", "QA", "BR", "MA", "US", "PY",
+  "AU", "DE", "EC", "NL", "JP", "TN", "ES", "SA", "UY", "BE",
+  "EG", "IR", "NZ", "FR", "SN", "NO", "AR", "DZ", "AT", "JO",
+  "GB", "HR", "GH", "PA", "PT", "UZ", "CO", "HT",
+];
+
+const DEMO_EMOJIS = ["⚽", "🔥", "😱", "🤬", "🎉", "😤", "🤦", "🟥"];
+
+export default function WorldMap({ mapState, layer = "intensity", demo = false }: WorldMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const demoInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Update colors via direct DOM manipulation — no re-render
   const updateColors = useCallback((state: MapState, currentLayer: string) => {
@@ -49,9 +61,9 @@ export default function WorldMap({ mapState, layer = "intensity" }: WorldMapProp
       1
     );
 
-    // Reset all countries to inactive
+    // Reset all countries to base
     svg.querySelectorAll("path[data-country]").forEach((path) => {
-      (path as SVGPathElement).style.fill = "#1a1a2e";
+      (path as SVGPathElement).style.fill = "#1e293b";
     });
 
     // Update active countries
@@ -68,16 +80,75 @@ export default function WorldMap({ mapState, layer = "intensity" }: WorldMapProp
         );
         path.style.fill = HEAT_COLORS[intensity];
       } else {
-        path.style.fill = REACTION_COLORS[data.top] || "#1a1a2e";
+        path.style.fill = REACTION_COLORS[data.top] || "#1e293b";
       }
     }
   }, []);
 
+  // Demo mode: simulate random reactions lighting up the map
   useEffect(() => {
-    if (mapState) {
+    if (!demo) return;
+
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    // Start with a few countries lit up
+    const activeCountries = new Map<string, { count: number; top: string }>();
+
+    function tick() {
+      // Randomly add/update 2-4 countries per tick
+      const numChanges = 2 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < numChanges; i++) {
+        const country = DEMO_COUNTRIES[Math.floor(Math.random() * DEMO_COUNTRIES.length)];
+        const emoji = DEMO_EMOJIS[Math.floor(Math.random() * DEMO_EMOJIS.length)];
+        const existing = activeCountries.get(country);
+        activeCountries.set(country, {
+          count: (existing?.count || 0) + Math.floor(Math.random() * 20) + 5,
+          top: emoji,
+        });
+      }
+
+      // Randomly cool down some countries
+      for (const [code, data] of activeCountries) {
+        if (Math.random() < 0.15) {
+          const newCount = data.count - Math.floor(Math.random() * 15);
+          if (newCount <= 0) {
+            activeCountries.delete(code);
+          } else {
+            activeCountries.set(code, { ...data, count: newCount });
+          }
+        }
+      }
+
+      const state: MapState = {
+        countries: Object.fromEntries(activeCountries),
+        totalActive: Array.from(activeCountries.values()).reduce((s, c) => s + c.count, 0),
+      };
+      updateColors(state, "intensity");
+    }
+
+    // Initial burst: light up several countries immediately
+    for (let i = 0; i < 8; i++) {
+      const country = DEMO_COUNTRIES[i];
+      activeCountries.set(country, {
+        count: Math.floor(Math.random() * 80) + 20,
+        top: DEMO_EMOJIS[Math.floor(Math.random() * DEMO_EMOJIS.length)],
+      });
+    }
+    tick();
+
+    demoInterval.current = setInterval(tick, 2000);
+    return () => {
+      if (demoInterval.current) clearInterval(demoInterval.current);
+    };
+  }, [demo, updateColors]);
+
+  // Real data updates
+  useEffect(() => {
+    if (!demo && mapState) {
       updateColors(mapState, layer);
     }
-  }, [mapState, layer, updateColors]);
+  }, [mapState, layer, updateColors, demo]);
 
   return (
     <svg
@@ -94,10 +165,10 @@ export default function WorldMap({ mapState, layer = "intensity" }: WorldMapProp
           d={country.d}
           className="map-country"
           style={{
-            fill: "#1a1a2e",
-            stroke: "#2a2a3e",
-            strokeWidth: 0.5,
-            transition: "fill 0.5s ease",
+            fill: "#1e293b",
+            stroke: "#334155",
+            strokeWidth: 0.4,
+            transition: "fill 0.8s ease",
           }}
         />
       ))}

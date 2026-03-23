@@ -19,7 +19,7 @@ export function codeToFlag(code: string): string {
 const FIFA_TO_ISO: Record<string, string> = {
   MEX: "MX", RSA: "ZA", KOR: "KR", CAN: "CA", QAT: "QA", SUI: "CH",
   BRA: "BR", MAR: "MA", HAI: "HT", SCO: "GB", USA: "US", PAR: "PY",
-  AUS: "AU", GER: "DE", CUR: "CW", CIV: "CI", ECU: "EC", NED: "NL",
+  AUS: "AU", GER: "DE", CUR: "CW", CUW: "CW", CIV: "CI", ECU: "EC", NED: "NL",
   JPN: "JP", TUN: "TN", ESP: "ES", CPV: "CV", KSA: "SA", URU: "UY",
   BEL: "BE", EGY: "EG", IRN: "IR", NZL: "NZ", FRA: "FR", SEN: "SN",
   NOR: "NO", ARG: "AR", ALG: "DZ", AUT: "AT", JOR: "JO", ENG: "GB",
