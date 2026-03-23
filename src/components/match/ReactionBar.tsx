@@ -13,6 +13,13 @@ interface ReactionConfig {
   sponsor_id: string | null;
 }
 
+export interface ReactionDetail {
+  reactionId: string;
+  emoji: string;
+  labelEs: string;
+  labelEn: string;
+}
+
 interface ReactionBarProps {
   matchId: string;
   teamSupported: string | null;
@@ -20,6 +27,7 @@ interface ReactionBarProps {
   isAuthenticated: boolean;
   userCountry: string | null;
   onReaction?: () => void;
+  onReactionSuccess?: (detail: ReactionDetail) => void;
 }
 
 interface FlyUp {
@@ -35,6 +43,7 @@ export default function ReactionBar({
   isAuthenticated,
   userCountry,
   onReaction,
+  onReactionSuccess,
 }: ReactionBarProps) {
   const locale = useLocale();
   const [cooldowns, setCooldowns] = useState<Record<string, boolean>>({});
@@ -94,11 +103,17 @@ export default function ReactionBar({
           }),
         });
         onReaction?.();
+        onReactionSuccess?.({
+          reactionId: reaction.id,
+          emoji: reaction.emoji,
+          labelEs: reaction.label_es,
+          labelEn: reaction.label_en,
+        });
       } catch {
         // Silently fail — UX already shown
       }
     },
-    [cooldowns, matchId, teamSupported, isAuthenticated, country, onReaction]
+    [cooldowns, matchId, teamSupported, isAuthenticated, country, onReaction, onReactionSuccess]
   );
 
   const handleCountrySelect = useCallback((code: string) => {

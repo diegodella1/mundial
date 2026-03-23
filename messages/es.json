@@ -3,10 +3,16 @@
     "appName": "Matchfeel",
     "tagline": "Sentí el mundo en tiempo real",
     "login": "Iniciar sesión",
+    "loginX": "Entrar con X",
     "logout": "Cerrar sesión",
     "loading": "Cargando...",
     "error": "Algo salió mal",
     "comingSoon": "Próximamente"
+  },
+  "nav": {
+    "matches": "Partidos",
+    "profile": "Mi perfil",
+    "admin": "Admin"
   },
   "fixture": {
     "live": "EN VIVO",
@@ -21,7 +27,8 @@
     "reactionsTitle": "Reacciones",
     "chat": "Chat",
     "events": "Eventos",
-    "minute": "min"
+    "minute": "min",
+    "backToHome": "Volver"
   },
   "home": {
     "activeNow": "{count} personas reaccionando ahora",
@@ -31,6 +38,7 @@
     "ctaStart": "Empezar sin cuenta",
     "ctaGoogle": "Entrar con Google",
     "ctaGoogleSecondary": "o iniciá sesión con Google",
+    "ctaXSecondary": "entrar con X",
     "ctaSubtext": "Sin descarga. Sin registro. Un toque y reaccionás.",
     "countdownPrefix": "Primer partido en",
     "countdownDays": "{days} días",
@@ -72,6 +80,7 @@
 
     "finalCtaTitle": "El Mundial empieza el 11 de junio",
     "finalCtaSecondary": "o iniciá sesión para guardar tus reacciones y recibir receipts",
+    "finalCtaXSecondary": "entrar con X",
     "footerMadeWith": "Matchfeel — Hecho con ❤️ en Argentina"
   },
   "receipt": {
@@ -84,6 +93,12 @@
     "noReactions": "No reaccionaste en este partido",
     "backHome": "Volver al inicio",
     "error": "Error al generar tu receipt"
+  },
+  "install": {
+    "title": "Instalá Matchfeel",
+    "button": "Instalar",
+    "ios": "Tocá <icon></icon> y luego \"Agregar a pantalla de inicio\"",
+    "dismiss": "Ahora no"
   },
   "profile": {
     "reactions": "Reacciones",

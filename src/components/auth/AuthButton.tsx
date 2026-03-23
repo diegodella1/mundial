@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { User } from "@supabase/supabase-js";
 
 function GoogleIcon() {
@@ -15,11 +16,24 @@ function GoogleIcon() {
   );
 }
 
-export default function AuthButton() {
+function XIcon() {
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+/**
+ * AuthButton — used on landing page CTAs (not in NavBar).
+ * Shows Google sign-in button when not logged in, nothing when logged in
+ * (the NavBar handles logged-in state via UserDropdown).
+ */
+export default function AuthButton({ variant = "primary" }: { variant?: "primary" | "secondary" }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [avatarError, setAvatarError] = useState(false);
   const supabase = createClient();
+  const t = useTranslations("common");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -28,7 +42,7 @@ export default function AuthButton() {
     });
   }, [supabase]);
 
-  async function handleSignIn() {
+  async function handleGoogleSignIn() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -37,55 +51,55 @@ export default function AuthButton() {
     });
   }
 
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    window.location.reload();
+  async function handleXSignIn() {
+    await supabase.auth.signInWithOAuth({
+      provider: "twitter",
+      options: {
+        redirectTo: window.location.origin + "/api/auth/callback",
+      },
+    });
   }
 
-  if (loading) {
+  if (loading || user) {
     return null;
   }
 
-  if (!user) {
+  if (variant === "secondary") {
     return (
-      <button
-        onClick={handleSignIn}
-        className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition-all hover:bg-zinc-100 active:scale-[0.97] min-h-[44px] focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
-      >
-        <GoogleIcon />
-        Iniciar sesión
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleGoogleSignIn}
+          className="text-sm text-zinc-400 hover:text-white transition-colors underline underline-offset-2"
+        >
+          {t("login")}
+        </button>
+        <span className="text-zinc-600">|</span>
+        <button
+          onClick={handleXSignIn}
+          className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors underline underline-offset-2"
+        >
+          <XIcon />
+          {t("loginX")}
+        </button>
+      </div>
     );
   }
 
-  const avatar = user.user_metadata?.avatar_url;
-  const name =
-    user.user_metadata?.full_name ?? user.user_metadata?.name ?? user.email;
-  const initials = (name ?? "?").charAt(0).toUpperCase();
-
   return (
     <div className="flex items-center gap-2">
-      {avatar && !avatarError ? (
-        <img
-          src={avatar}
-          alt=""
-          className="h-8 w-8 rounded-full ring-2 ring-transparent hover:ring-zinc-600 transition-all"
-          referrerPolicy="no-referrer"
-          onError={() => setAvatarError(true)}
-        />
-      ) : (
-        <div className="h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300">
-          {initials}
-        </div>
-      )}
-      <span className="text-sm text-zinc-200 max-w-[120px] truncate">
-        {name}
-      </span>
       <button
-        onClick={handleSignOut}
-        className="rounded-lg bg-zinc-800 px-3 py-1.5 text-sm text-zinc-100 transition-all hover:bg-zinc-700 active:scale-[0.97] min-h-[44px] focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+        onClick={handleGoogleSignIn}
+        className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition-all hover:bg-zinc-100 active:scale-[0.97] min-h-[44px] focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
       >
-        Salir
+        <GoogleIcon />
+        {t("login")}
+      </button>
+      <button
+        onClick={handleXSignIn}
+        className="flex items-center gap-2 rounded-lg bg-zinc-900 border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-100 transition-all hover:bg-zinc-800 active:scale-[0.97] min-h-[44px] focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+      >
+        <XIcon />
+        {t("loginX")}
       </button>
     </div>
   );

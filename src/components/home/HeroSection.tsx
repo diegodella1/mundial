@@ -34,9 +34,18 @@ export default function HeroSection() {
     setMounted(true);
   }, []);
 
-  async function handleSignIn() {
+  async function handleGoogleSignIn() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/api/auth/callback",
+      },
+    });
+  }
+
+  async function handleXSignIn() {
+    await supabase.auth.signInWithOAuth({
+      provider: "twitter",
       options: {
         redirectTo: window.location.origin + "/api/auth/callback",
       },
@@ -95,12 +104,22 @@ export default function HeroSection() {
         >
           {t("ctaStart")}
         </a>
-        <div className="mt-3">
+        <div className="mt-3 flex items-center justify-center gap-3">
           <button
-            onClick={handleSignIn}
+            onClick={handleGoogleSignIn}
             className="text-sm text-zinc-400 hover:text-orange-400 transition-colors underline underline-offset-4 decoration-zinc-700 hover:decoration-orange-400/50"
           >
             {t("ctaGoogleSecondary")}
+          </button>
+          <span className="text-zinc-600">|</span>
+          <button
+            onClick={handleXSignIn}
+            className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-orange-400 transition-colors underline underline-offset-4 decoration-zinc-700 hover:decoration-orange-400/50"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            {t("ctaXSecondary")}
           </button>
         </div>
         <p className="mt-4 text-sm text-zinc-500">

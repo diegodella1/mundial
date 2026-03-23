@@ -3,10 +3,16 @@
     "appName": "Matchfeel",
     "tagline": "Feel the world in real time",
     "login": "Sign in",
+    "loginX": "Sign in with X",
     "logout": "Sign out",
     "loading": "Loading...",
     "error": "Something went wrong",
     "comingSoon": "Coming soon"
+  },
+  "nav": {
+    "matches": "Matches",
+    "profile": "My profile",
+    "admin": "Admin"
   },
   "fixture": {
     "live": "LIVE",
@@ -21,7 +27,8 @@
     "reactionsTitle": "Reactions",
     "chat": "Chat",
     "events": "Events",
-    "minute": "min"
+    "minute": "min",
+    "backToHome": "Back"
   },
   "home": {
     "activeNow": "{count} people reacting now",
@@ -31,6 +38,7 @@
     "ctaStart": "Start without an account",
     "ctaGoogle": "Sign in with Google",
     "ctaGoogleSecondary": "or sign in with Google",
+    "ctaXSecondary": "sign in with X",
     "ctaSubtext": "No download. No signup. One tap and you react.",
     "countdownPrefix": "First match in",
     "countdownDays": "{days} days",
@@ -72,6 +80,7 @@
 
     "finalCtaTitle": "The World Cup starts June 11",
     "finalCtaSecondary": "or sign in to save your reactions and get receipts",
+    "finalCtaXSecondary": "sign in with X",
     "footerMadeWith": "Matchfeel — Made with ❤️ in Argentina"
   },
   "receipt": {
@@ -84,6 +93,12 @@
     "noReactions": "You didn't react in this match",
     "backHome": "Back to home",
     "error": "Failed to generate your receipt"
+  },
+  "install": {
+    "title": "Install Matchfeel",
+    "button": "Install",
+    "ios": "Tap <icon></icon> then \"Add to Home Screen\"",
+    "dismiss": "Not now"
   },
   "profile": {
     "reactions": "Reactions",

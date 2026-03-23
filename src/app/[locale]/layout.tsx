@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import "../globals.css";
 import NavBar from "@/components/layout/NavBar";
 import MapBackground from "@/components/layout/MapBackground";
+import InstallPrompt from "@/components/pwa/InstallPrompt";
 
 export const metadata: Metadata = {
   title: "Matchfeel — Mundial 2026",
@@ -47,6 +48,9 @@ export default async function LocaleLayout({
           <main className="relative z-10">
             {children}
           </main>
+
+          {/* PWA install prompt */}
+          <InstallPrompt />
         </NextIntlClientProvider>
       </body>
     </html>
