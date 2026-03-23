@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { ReceiptData } from "@/lib/receipts";
+import { codeToFlag } from "@/lib/flags";
 
 const REACTION_COLORS: Record<string, string> = {
   "\u26BD": "#22c55e",
@@ -78,8 +79,9 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
           <div className="text-center py-3">
             <div className="flex items-center justify-center gap-4">
               <div className="text-right flex-1">
-                <p className="text-xs text-zinc-400 uppercase tracking-wide">
-                  {match.home_code}
+                <p className="text-xs text-zinc-400 uppercase tracking-wide flex items-center justify-end gap-1">
+                  <span>{match.home_code}</span>
+                  <span className="text-sm">{codeToFlag(match.home_code)}</span>
                 </p>
                 <p className="text-sm text-zinc-300">{match.home_team}</p>
               </div>
@@ -93,8 +95,9 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
                 </span>
               </div>
               <div className="text-left flex-1">
-                <p className="text-xs text-zinc-400 uppercase tracking-wide">
-                  {match.away_code}
+                <p className="text-xs text-zinc-400 uppercase tracking-wide flex items-center gap-1">
+                  <span className="text-sm">{codeToFlag(match.away_code)}</span>
+                  <span>{match.away_code}</span>
                 </p>
                 <p className="text-sm text-zinc-300">{match.away_team}</p>
               </div>

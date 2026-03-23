@@ -25,7 +25,7 @@ export default function NavBar() {
       {/* Right: nav items */}
       <div className="flex items-center gap-3">
         <Link
-          href={`/${locale}#upcoming`}
+          href={`/${locale}/matches`}
           className="hidden sm:inline text-sm text-zinc-400 hover:text-white transition-colors"
         >
           {tNav("matches")}

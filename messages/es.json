@@ -100,6 +100,22 @@
     "ios": "Tocá <icon></icon> y luego \"Agregar a pantalla de inicio\"",
     "dismiss": "Ahora no"
   },
+  "matches": {
+    "title": "Todos los partidos",
+    "subtitle": "Los 72 partidos de fase de grupos del Mundial 2026",
+    "filterAll": "Todos",
+    "filterLive": "En vivo",
+    "filterUpcoming": "Programados",
+    "filterFinished": "Finalizados",
+    "searchPlaceholder": "Buscar equipo...",
+    "noResults": "No se encontraron partidos",
+    "scheduled": "Programado",
+    "live": "En vivo",
+    "halftime": "Entretiempo",
+    "finished": "Finalizado",
+    "postponed": "Pospuesto",
+    "matchCount": "{count} partidos"
+  },
   "profile": {
     "reactions": "Reacciones",
     "matches": "Partidos",

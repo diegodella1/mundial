@@ -100,6 +100,22 @@
     "ios": "Tap <icon></icon> then \"Add to Home Screen\"",
     "dismiss": "Not now"
   },
+  "matches": {
+    "title": "All matches",
+    "subtitle": "All 72 group stage matches of the 2026 World Cup",
+    "filterAll": "All",
+    "filterLive": "Live",
+    "filterUpcoming": "Upcoming",
+    "filterFinished": "Finished",
+    "searchPlaceholder": "Search team...",
+    "noResults": "No matches found",
+    "scheduled": "Scheduled",
+    "live": "Live",
+    "halftime": "Halftime",
+    "finished": "Finished",
+    "postponed": "Postponed",
+    "matchCount": "{count} matches"
+  },
   "profile": {
     "reactions": "Reactions",
     "matches": "Matches",

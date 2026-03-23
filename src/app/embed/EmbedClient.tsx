@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import WorldMap from "@/components/map/WorldMap";
 import { createClient } from "@/lib/supabase/client";
+import { codeToFlag } from "@/lib/flags";
 
 interface Match {
   id: string;
@@ -154,6 +155,7 @@ export default function EmbedClient() {
 
           {/* Score */}
           <div className="flex items-center justify-center gap-3">
+            <span className="text-xl">{codeToFlag(match.home_code)}</span>
             <span className={`text-lg font-bold tracking-wide ${isLight ? "text-gray-800" : "text-zinc-100"}`}>
               {match.home_code}
             </span>
@@ -171,6 +173,7 @@ export default function EmbedClient() {
             <span className={`text-lg font-bold tracking-wide ${isLight ? "text-gray-800" : "text-zinc-100"}`}>
               {match.away_code}
             </span>
+            <span className="text-xl">{codeToFlag(match.away_code)}</span>
           </div>
         </div>
       )}

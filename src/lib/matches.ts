@@ -55,3 +55,19 @@ export async function getMatches(): Promise<MatchGroups> {
     finished: (finished as Match[]) ?? [],
   };
 }
+
+export async function getAllMatches(): Promise<Match[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("matches")
+    .select("*")
+    .order("kickoff_at", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching all matches:", error);
+    return [];
+  }
+
+  return (data as Match[]) ?? [];
+}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import type { Match } from "@/lib/matches";
+import { codeToFlag } from "@/lib/flags";
 
 interface MatchCardProps {
   match: Match;
@@ -58,11 +59,12 @@ export default function MatchCard({ match }: MatchCardProps) {
         {/* Teams and score */}
         <div className="flex items-center justify-between gap-3">
           {/* Home team */}
-          <div className="flex-1 text-left">
+          <div className="flex-1 text-left flex items-center gap-1.5">
+            <span className="text-base">{codeToFlag(match.home_code)}</span>
             <span className="text-sm font-bold text-zinc-100 tracking-wide">
               {match.home_code}
             </span>
-            <span className="ml-2 text-xs text-zinc-500 hidden sm:inline">
+            <span className="text-xs text-zinc-500 hidden sm:inline">
               {match.home_team}
             </span>
           </div>
@@ -81,13 +83,14 @@ export default function MatchCard({ match }: MatchCardProps) {
           </div>
 
           {/* Away team */}
-          <div className="flex-1 text-right">
-            <span className="text-xs text-zinc-500 hidden sm:inline mr-2">
+          <div className="flex-1 text-right flex items-center justify-end gap-1.5">
+            <span className="text-xs text-zinc-500 hidden sm:inline">
               {match.away_team}
             </span>
             <span className="text-sm font-bold text-zinc-100 tracking-wide">
               {match.away_code}
             </span>
+            <span className="text-base">{codeToFlag(match.away_code)}</span>
           </div>
         </div>
       </div>
