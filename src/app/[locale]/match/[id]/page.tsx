@@ -44,6 +44,7 @@ export default async function MatchPage({
   } = await supabase.auth.getUser();
 
   let userTeamCode: string | null = null;
+  let userCountry: string | null = null;
   if (user) {
     const { data: teamSelection } = await supabase
       .from("user_match_teams")
@@ -53,6 +54,15 @@ export default async function MatchPage({
       .single();
 
     userTeamCode = teamSelection?.team_code ?? null;
+
+    // Try to get user's country from their profile
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("country_code")
+      .eq("id", user.id)
+      .single();
+
+    userCountry = profile?.country_code ?? null;
   }
 
   return (
@@ -68,6 +78,7 @@ export default async function MatchPage({
           initialTeamCode={userTeamCode}
           isLoggedIn={!!user}
           chatEnabled={match.chat_enabled !== false}
+          userCountryFromProfile={userCountry}
         />
       </div>
     </div>

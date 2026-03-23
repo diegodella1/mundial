@@ -5,14 +5,19 @@ import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   // 1. Parse body
-  let body: { match_id: string; reaction_type: string; team_supported?: string };
+  let body: {
+    match_id: string;
+    reaction_type: string;
+    team_supported?: string;
+    country_code?: string;
+  };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { match_id, reaction_type, team_supported } = body;
+  const { match_id, reaction_type, team_supported, country_code: bodyCountry } = body;
   if (!match_id || !reaction_type) {
     return NextResponse.json(
       { error: "match_id and reaction_type are required" },
@@ -20,7 +25,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 2. Get user from Supabase auth via request cookies
+  // 2. Try to get user from Supabase auth (OPTIONAL)
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -30,7 +35,6 @@ export async function POST(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          // Route handlers can't set cookies on the request, but we need the interface
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
@@ -43,36 +47,40 @@ export async function POST(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 3. Auth check
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // 3. Rate limit: by user_id if logged in, by IP if anonymous
+  const rateLimitKey = user
+    ? user.id
+    : request.headers.get("cf-connecting-ip") ||
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "unknown";
 
-  // 4. Rate limit: 1 reaction per second per user
-  if (!checkRateLimit(user.id, 1000)) {
+  if (!checkRateLimit(rateLimitKey, 1000)) {
     return NextResponse.json({ error: "Too fast" }, { status: 429 });
   }
 
-  // 5. Check user not banned (use admin client to bypass RLS)
-  const { data: bans } = await supabaseAdmin
-    .from("user_bans")
-    .select("id")
-    .eq("user_id", user.id)
-    .gt("banned_until", new Date().toISOString())
-    .or(`match_id.eq.${match_id},match_id.is.null`)
-    .limit(1);
+  // 4. Ban check — only for authenticated users
+  if (user) {
+    const { data: bans } = await supabaseAdmin
+      .from("user_bans")
+      .select("id")
+      .eq("user_id", user.id)
+      .gt("banned_until", new Date().toISOString())
+      .or(`match_id.eq.${match_id},match_id.is.null`)
+      .limit(1);
 
-  if (bans && bans.length > 0) {
-    return NextResponse.json({ error: "Banned" }, { status: 403 });
+    if (bans && bans.length > 0) {
+      return NextResponse.json({ error: "Banned" }, { status: 403 });
+    }
   }
 
-  // 6. Get country_code from request headers
+  // 5. Resolve country_code: body (anonymous) > headers > fallback
   const country_code =
+    bodyCountry ||
     request.headers.get("x-country-code") ||
     request.headers.get("cf-ipcountry") ||
     "XX";
 
-  // 7. Get match_minute from matches table
+  // 6. Get match_minute from matches table
   const { data: match } = await supabaseAdmin
     .from("matches")
     .select("started_at, status")
@@ -85,10 +93,10 @@ export async function POST(request: NextRequest) {
     match_minute = Math.floor(elapsed / 60_000);
   }
 
-  // 8. Insert reaction
+  // 7. Insert reaction (user_id is null for anonymous)
   const { error: insertError } = await supabaseAdmin.from("reactions").insert({
     match_id,
-    user_id: user.id,
+    user_id: user?.id ?? null,
     reaction_type,
     team_supported: team_supported || null,
     country_code,
@@ -100,6 +108,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Insert failed" }, { status: 500 });
   }
 
-  // 9. Success
+  // 8. Success
   return NextResponse.json({ ok: true }, { status: 201 });
 }

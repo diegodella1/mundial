@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import ReactionFlyUp from "./ReactionFlyUp";
+import CountryPicker from "./CountryPicker";
 
 interface ReactionConfig {
   id: string;
@@ -16,6 +17,9 @@ interface ReactionBarProps {
   matchId: string;
   teamSupported: string | null;
   reactions: ReactionConfig[];
+  isAuthenticated: boolean;
+  userCountry: string | null;
+  onReaction?: () => void;
 }
 
 interface FlyUp {
@@ -28,14 +32,35 @@ export default function ReactionBar({
   matchId,
   teamSupported,
   reactions,
+  isAuthenticated,
+  userCountry,
+  onReaction,
 }: ReactionBarProps) {
   const locale = useLocale();
   const [cooldowns, setCooldowns] = useState<Record<string, boolean>>({});
   const [flyUps, setFlyUps] = useState<FlyUp[]>([]);
   const flyUpIdRef = useRef(0);
+  const [country, setCountry] = useState<string | null>(userCountry);
+  const [showCountryPicker, setShowCountryPicker] = useState(false);
+
+  // On mount, check localStorage for stored country (anonymous users)
+  useEffect(() => {
+    if (!isAuthenticated && !country) {
+      const stored = localStorage.getItem("matchfeel_country");
+      if (stored) {
+        setCountry(stored);
+      }
+    }
+  }, [isAuthenticated, country]);
 
   const handleReaction = useCallback(
     async (reaction: ReactionConfig, buttonIndex: number) => {
+      // If anonymous and no country selected, show picker first
+      if (!isAuthenticated && !country) {
+        setShowCountryPicker(true);
+        return;
+      }
+
       if (cooldowns[reaction.id]) return;
 
       // Haptic feedback
@@ -63,61 +88,76 @@ export default function ReactionBar({
             match_id: matchId,
             reaction_type: reaction.id,
             team_supported: teamSupported,
+            ...(!isAuthenticated && {
+              country_code: country,
+            }),
           }),
         });
+        onReaction?.();
       } catch {
         // Silently fail — UX already shown
       }
     },
-    [cooldowns, matchId, teamSupported]
+    [cooldowns, matchId, teamSupported, isAuthenticated, country, onReaction]
   );
+
+  const handleCountrySelect = useCallback((code: string) => {
+    setCountry(code);
+    setShowCountryPicker(false);
+  }, []);
 
   const removeFlyUp = useCallback((id: number) => {
     setFlyUps((prev) => prev.filter((f) => f.id !== id));
   }, []);
 
   return (
-    <div className="grid grid-cols-4 gap-2.5">
-      {reactions.map((reaction, index) => {
-        const label =
-          locale === "es" ? reaction.label_es : reaction.label_en;
-        const isDisabled = cooldowns[reaction.id];
+    <>
+      {showCountryPicker && (
+        <CountryPicker onSelect={handleCountrySelect} />
+      )}
 
-        return (
-          <div key={reaction.id} className="relative">
-            {/* Fly-up animations for this button */}
-            {flyUps
-              .filter((f) => f.buttonIndex === index)
-              .map((f) => (
-                <ReactionFlyUp
-                  key={f.id}
-                  emoji={f.emoji}
-                  onComplete={() => removeFlyUp(f.id)}
-                />
-              ))}
+      <div className="grid grid-cols-4 gap-2.5">
+        {reactions.map((reaction, index) => {
+          const label =
+            locale === "es" ? reaction.label_es : reaction.label_en;
+          const isDisabled = cooldowns[reaction.id];
 
-            <button
-              onClick={() => handleReaction(reaction, index)}
-              disabled={isDisabled}
-              className={`relative flex flex-col items-center gap-1.5 w-full rounded-xl bg-zinc-800/60 border p-3 transition-transform duration-100 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none ${
-                isDisabled
-                  ? "animate-pulse-opacity border-zinc-700/20 cursor-not-allowed"
-                  : "border-zinc-700/30 hover:border-zinc-600/50 hover:bg-zinc-700/60 active:scale-90"
-              }`}
-            >
-              {/* Sponsored indicator */}
-              {reaction.sponsor_id && (
-                <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-orange-500 ring-2 ring-zinc-900" />
-              )}
+          return (
+            <div key={reaction.id} className="relative">
+              {/* Fly-up animations for this button */}
+              {flyUps
+                .filter((f) => f.buttonIndex === index)
+                .map((f) => (
+                  <ReactionFlyUp
+                    key={f.id}
+                    emoji={f.emoji}
+                    onComplete={() => removeFlyUp(f.id)}
+                  />
+                ))}
 
-              <span className="text-3xl leading-none">{reaction.emoji}</span>
-              <span className="text-[11px] font-medium text-zinc-400 leading-tight truncate w-full text-center">
-                {label}
-              </span>
-            </button>
-          </div>
-        );
-      })}
-    </div>
+              <button
+                onClick={() => handleReaction(reaction, index)}
+                disabled={isDisabled}
+                className={`relative flex flex-col items-center gap-1.5 w-full rounded-xl bg-zinc-800/60 border p-3 transition-transform duration-100 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none ${
+                  isDisabled
+                    ? "animate-pulse-opacity border-zinc-700/20 cursor-not-allowed"
+                    : "border-zinc-700/30 hover:border-zinc-600/50 hover:bg-zinc-700/60 active:scale-90"
+                }`}
+              >
+                {/* Sponsored indicator */}
+                {reaction.sponsor_id && (
+                  <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-orange-500 ring-2 ring-zinc-900" />
+                )}
+
+                <span className="text-3xl leading-none">{reaction.emoji}</span>
+                <span className="text-[11px] font-medium text-zinc-400 leading-tight truncate w-full text-center">
+                  {label}
+                </span>
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }

@@ -1,11 +1,14 @@
 "use client";
 
 import WorldMap from "@/components/map/WorldMap";
+import { useRealtimeMap } from "@/hooks/useRealtimeMap";
 
 export default function MapBackground() {
+  const { mapState, layer } = useRealtimeMap();
+
   return (
     <div className="fixed inset-0 z-0">
-      <WorldMap />
+      <WorldMap mapState={mapState} layer={layer} />
       {/* Vignette overlay to darken edges and improve content readability */}
       <div
         className="absolute inset-0 pointer-events-none"

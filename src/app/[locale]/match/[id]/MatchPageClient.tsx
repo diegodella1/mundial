@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Match } from "@/lib/matches";
 import ScoreHeader from "@/components/match/ScoreHeader";
 import TeamSelector from "@/components/match/TeamSelector";
@@ -21,6 +21,7 @@ interface MatchPageClientProps {
   initialTeamCode: string | null;
   isLoggedIn: boolean;
   chatEnabled: boolean;
+  userCountryFromProfile: string | null;
 }
 
 type Tab = "reactions" | "chat";
@@ -31,9 +32,21 @@ export default function MatchPageClient({
   initialTeamCode,
   isLoggedIn,
   chatEnabled,
+  userCountryFromProfile,
 }: MatchPageClientProps) {
   const [teamCode, setTeamCode] = useState<string | null>(initialTeamCode);
   const [activeTab, setActiveTab] = useState<Tab>("reactions");
+  const [userCountry, setUserCountry] = useState<string | null>(
+    userCountryFromProfile
+  );
+
+  // On mount, check localStorage for anonymous country
+  useEffect(() => {
+    if (!isLoggedIn && !userCountry) {
+      const stored = localStorage.getItem("matchfeel_country");
+      if (stored) setUserCountry(stored);
+    }
+  }, [isLoggedIn, userCountry]);
 
   return (
     <div className="max-w-lg mx-auto space-y-8">
@@ -81,6 +94,8 @@ export default function MatchPageClient({
             matchId={match.id}
             teamSupported={teamCode}
             reactions={reactions}
+            isAuthenticated={isLoggedIn}
+            userCountry={userCountry}
           />
         ) : (
           <ChatBox matchId={match.id} chatEnabled={chatEnabled} />
