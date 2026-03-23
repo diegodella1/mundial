@@ -10,6 +10,7 @@ export interface Match {
   status: "scheduled" | "live" | "halftime" | "finished" | "postponed";
   home_score: number;
   away_score: number;
+  match_minute: number | null;
   group_name: string | null;
   round: string | null;
 }
