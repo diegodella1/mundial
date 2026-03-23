@@ -26,5 +26,23 @@
   "home": {
     "activeNow": "{count} people reacting now",
     "worldCup": "World Cup 2026"
+  },
+  "receipt": {
+    "title": "Your Receipt",
+    "yourTeam": "Your team",
+    "yourReactions": "Your reactions",
+    "yourMoment": "Your moment",
+    "countryVsWorld": "Your country vs the world",
+    "share": "Share",
+    "noReactions": "You didn't react in this match",
+    "backHome": "Back to home",
+    "error": "Failed to generate your receipt"
+  },
+  "profile": {
+    "reactions": "Reactions",
+    "matches": "Matches",
+    "yourReceipts": "Your receipts",
+    "noReceipts": "No receipts yet. React in a match to get your first receipt.",
+    "backHome": "Back to home"
   }
 }

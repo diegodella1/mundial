@@ -26,5 +26,23 @@
   "home": {
     "activeNow": "{count} personas reaccionando ahora",
     "worldCup": "Mundial 2026"
+  },
+  "receipt": {
+    "title": "Tu Receipt",
+    "yourTeam": "Tu equipo",
+    "yourReactions": "Tus reacciones",
+    "yourMoment": "Tu momento",
+    "countryVsWorld": "Tu país vs el mundo",
+    "share": "Compartir",
+    "noReactions": "No reaccionaste en este partido",
+    "backHome": "Volver al inicio",
+    "error": "Error al generar tu receipt"
+  },
+  "profile": {
+    "reactions": "Reacciones",
+    "matches": "Partidos",
+    "yourReceipts": "Tus receipts",
+    "noReceipts": "Todavía no tenés receipts. Reaccioná en un partido para obtener tu primer receipt.",
+    "backHome": "Volver al inicio"
   }
 }
