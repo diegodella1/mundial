@@ -3,6 +3,17 @@
 import { useRef } from "react";
 import type { ReceiptData } from "@/lib/receipts";
 
+const REACTION_COLORS: Record<string, string> = {
+  "\u26BD": "#22c55e",
+  "\uD83D\uDD25": "#f97316",
+  "\uD83D\uDE31": "#3b82f6",
+  "\uD83E\uDD2C": "#ef4444",
+  "\uD83D\uDFE5": "#dc2626",
+  "\uD83E\uDD26": "#a855f7",
+  "\uD83D\uDE24": "#eab308",
+  "\uD83C\uDF89": "#06b6d4",
+};
+
 interface ReceiptCardProps {
   data: ReceiptData;
   matchId: string;
@@ -46,16 +57,16 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
   });
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 w-full px-4">
       {/* Card */}
       <div
         ref={cardRef}
-        className="w-[360px] rounded-2xl p-[1px] bg-gradient-to-br from-orange-500 via-purple-500 to-pink-500"
+        className="w-full max-w-[360px] rounded-2xl p-[1.5px] bg-gradient-to-br from-orange-500 via-purple-500 to-pink-500"
       >
-        <div className="rounded-2xl bg-gradient-to-b from-zinc-900 to-zinc-800 p-5 flex flex-col gap-4">
+        <div className="rounded-[14px] bg-gradient-to-b from-zinc-900 to-zinc-800 p-6 flex flex-col gap-5">
           {/* Header */}
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-mono">
+            <p className="text-[10px] uppercase tracking-[0.3em] font-mono font-semibold bg-clip-text text-transparent bg-gradient-to-r from-zinc-400 to-zinc-600">
               Matchfeel Receipt
             </p>
             <p className="text-[10px] text-zinc-600 font-mono mt-0.5">
@@ -73,11 +84,11 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
                 <p className="text-sm text-zinc-300">{match.home_team}</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-3xl font-bold text-white tabular-nums">
+                <span className="text-4xl font-bold text-white tabular-nums">
                   {match.home_score}
                 </span>
                 <span className="text-lg text-zinc-600">-</span>
-                <span className="text-3xl font-bold text-white tabular-nums">
+                <span className="text-4xl font-bold text-white tabular-nums">
                   {match.away_score}
                 </span>
               </div>
@@ -117,6 +128,10 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
                     key={i}
                     className="flex items-center gap-3 bg-zinc-800/50 rounded-lg px-3 py-2"
                   >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ backgroundColor: REACTION_COLORS[r.emoji] || "#71717a" }}
+                    />
                     <span className="text-2xl">{r.emoji}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-zinc-300">{r.label}</p>
@@ -185,7 +200,7 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
 
           {/* Stats */}
           <div className="text-center">
-            <p className="text-xs text-zinc-500">
+            <p className="text-sm text-zinc-500">
               {totalReactions.toLocaleString("es-AR")} reacciones totales
               {" "}
               <span className="text-zinc-600">&bull;</span>
@@ -206,7 +221,7 @@ export default function ReceiptCard({ data, matchId }: ReceiptCardProps) {
       {/* Share button */}
       <button
         onClick={handleShare}
-        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-purple-500 px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 active:scale-95"
+        className="w-full max-w-[360px] flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 outline-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

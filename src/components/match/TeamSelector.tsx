@@ -49,7 +49,7 @@ export default function TeamSelector({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <p className="text-center text-sm font-medium text-zinc-400">
         {t("chooseTeam")}
       </p>
@@ -57,19 +57,19 @@ export default function TeamSelector({
         <button
           onClick={() => handleSelect(homeCode)}
           disabled={loading}
-          className="flex flex-col items-center gap-1 rounded-xl bg-zinc-800/80 p-4 transition hover:bg-zinc-700/80 active:scale-95 disabled:opacity-50"
+          className="flex flex-col items-center justify-center gap-2 rounded-xl bg-zinc-800/80 border border-zinc-700/50 py-6 px-4 min-h-[80px] transition-all duration-150 hover:bg-zinc-700/80 hover:border-zinc-600/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none"
         >
-          <span className="text-2xl font-bold text-zinc-100">{homeCode}</span>
-          <span className="text-xs text-zinc-400">{homeTeam}</span>
+          <span className="text-3xl font-bold text-zinc-100">{homeCode}</span>
+          <span className="text-sm text-zinc-400">{homeTeam}</span>
         </button>
 
         <button
           onClick={() => handleSelect(awayCode)}
           disabled={loading}
-          className="flex flex-col items-center gap-1 rounded-xl bg-zinc-800/80 p-4 transition hover:bg-zinc-700/80 active:scale-95 disabled:opacity-50"
+          className="flex flex-col items-center justify-center gap-2 rounded-xl bg-zinc-800/80 border border-zinc-700/50 py-6 px-4 min-h-[80px] transition-all duration-150 hover:bg-zinc-700/80 hover:border-zinc-600/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none"
         >
-          <span className="text-2xl font-bold text-zinc-100">{awayCode}</span>
-          <span className="text-xs text-zinc-400">{awayTeam}</span>
+          <span className="text-3xl font-bold text-zinc-100">{awayCode}</span>
+          <span className="text-sm text-zinc-400">{awayTeam}</span>
         </button>
       </div>
     </div>

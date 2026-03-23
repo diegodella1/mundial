@@ -15,7 +15,7 @@ export default function ReactionFlyUp({
   }, [onComplete]);
 
   return (
-    <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-2 animate-fly-up text-3xl z-10">
+    <span className="pointer-events-none absolute inset-x-0 top-0 flex justify-center -translate-y-2 animate-fly-up text-4xl z-10">
       {emoji}
     </span>
   );

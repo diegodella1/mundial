@@ -31,6 +31,27 @@ function timeAgo(dateStr: string): string {
   return `${hours}h`;
 }
 
+/** Simple hash from string to pick avatar background color */
+function nameToColor(name: string): string {
+  const colors = [
+    "bg-red-800/60",
+    "bg-orange-800/60",
+    "bg-amber-800/60",
+    "bg-emerald-800/60",
+    "bg-teal-800/60",
+    "bg-cyan-800/60",
+    "bg-blue-800/60",
+    "bg-indigo-800/60",
+    "bg-violet-800/60",
+    "bg-pink-800/60",
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
+
 export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -143,29 +164,32 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
 
   if (!chatEnabled) {
     return (
-      <div className="rounded-xl bg-zinc-900 p-4 text-center text-sm text-zinc-500">
+      <div className="rounded-xl bg-zinc-900 border border-zinc-800/50 p-4 text-center text-sm text-zinc-500">
         Chat desactivado
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col rounded-xl bg-zinc-900 overflow-hidden">
+    <div className="flex flex-col rounded-xl bg-zinc-900 border border-zinc-800/50 overflow-hidden">
       {/* Messages area */}
       <div
         ref={scrollRef}
-        className="flex flex-col gap-1.5 p-3 overflow-y-auto"
+        className="flex flex-col gap-2 p-3 overflow-y-auto"
         style={{ height: "280px" }}
       >
         {messages.length === 0 && (
-          <p className="text-center text-xs text-zinc-600 mt-auto mb-auto">
-            Sin mensajes aun. Se el primero!
-          </p>
+          <div className="text-center mt-auto mb-auto space-y-2">
+            <span className="text-3xl block">💬</span>
+            <p className="text-xs text-zinc-600">
+              Sin mensajes aun. Se el primero!
+            </p>
+          </div>
         )}
         {messages.map((msg) => (
           <div key={msg.id} className="group flex items-start gap-2">
             {/* Avatar */}
-            <div className="h-6 w-6 flex-shrink-0 rounded-full bg-zinc-700 overflow-hidden mt-0.5">
+            <div className="h-7 w-7 flex-shrink-0 rounded-full overflow-hidden mt-0.5">
               {msg.avatar_url ? (
                 <img
                   src={msg.avatar_url}
@@ -173,7 +197,9 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="h-full w-full flex items-center justify-center text-[10px] text-zinc-400">
+                <div
+                  className={`h-full w-full flex items-center justify-center text-xs font-semibold text-zinc-200 ${nameToColor(msg.display_name)}`}
+                >
                   {msg.display_name.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -182,12 +208,12 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="inline rounded-lg bg-zinc-800 px-2.5 py-1.5 text-sm">
-                <span className="font-medium text-zinc-300 mr-1.5">
+                <span className="font-bold text-zinc-200 mr-1.5">
                   {msg.display_name}
                 </span>
                 <span className="text-zinc-100 break-words">{msg.body}</span>
               </div>
-              <span className="ml-2 text-[10px] text-zinc-600">
+              <span className="ml-2 text-[11px] text-zinc-500">
                 {timeAgo(msg.created_at)}
               </span>
             </div>
@@ -195,7 +221,8 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
             {/* Report button */}
             <button
               onClick={() => handleReport(msg.id)}
-              className={`flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded ${
+              aria-label={reportedIds.has(msg.id) ? "Reportado" : "Reportar mensaje"}
+              className={`flex-shrink-0 opacity-0 group-hover:opacity-100 sm:group-hover:opacity-100 max-sm:opacity-60 transition-opacity p-1.5 rounded ${
                 reportedIds.has(msg.id)
                   ? "text-red-500 cursor-default"
                   : "text-zinc-600 hover:text-zinc-400"
@@ -221,6 +248,13 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
         ))}
       </div>
 
+      {/* Cooldown progress bar */}
+      <div className="h-0.5 bg-zinc-800/50">
+        {cooldown && (
+          <div className="h-full bg-zinc-600 animate-cooldown-fill" />
+        )}
+      </div>
+
       {/* Input area */}
       <div className="flex items-center gap-2 border-t border-zinc-800 p-2">
         <input
@@ -235,7 +269,7 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
           }}
           maxLength={280}
           placeholder="Escribe un mensaje..."
-          className="flex-1 rounded-lg bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600"
+          className="flex-1 rounded-lg bg-zinc-800 border border-zinc-700/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none transition-colors focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/30"
         />
         <button
           onClick={handleSend}
@@ -243,7 +277,7 @@ export default function ChatBox({ matchId, chatEnabled }: ChatBoxProps) {
           className={`flex-shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
             !input.trim() || sending || cooldown
               ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
-              : "bg-white text-black hover:bg-zinc-200"
+              : "bg-white text-zinc-900 hover:bg-zinc-100"
           }`}
         >
           {cooldown ? (

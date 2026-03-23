@@ -28,17 +28,17 @@ export default function MatchCard({ match }: MatchCardProps) {
 
   return (
     <Link href={`/${locale}/match/${match.id}`}>
-      <div className="bg-zinc-900/80 backdrop-blur rounded-xl p-4 hover:bg-zinc-800/80 transition-colors cursor-pointer">
+      <div className="bg-zinc-900/80 backdrop-blur-sm border border-zinc-800/50 rounded-xl p-4 min-h-[44px] hover:bg-zinc-800/80 hover:border-zinc-700/50 active:scale-[0.98] transition-all duration-150 cursor-pointer">
         {/* Status badge */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-zinc-500">
             {match.group_name ?? match.round ?? ""}
           </span>
           {isLive && (
-            <span className="flex items-center gap-1.5 text-xs font-bold text-red-500">
-              <span className="relative flex h-2 w-2">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.3)] rounded-full px-2 py-0.5 bg-red-500/10">
+              <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
               </span>
               {t("live")}
             </span>
@@ -59,7 +59,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         <div className="flex items-center justify-between gap-3">
           {/* Home team */}
           <div className="flex-1 text-left">
-            <span className="text-sm font-semibold text-zinc-100">
+            <span className="text-sm font-bold text-zinc-100 tracking-wide">
               {match.home_code}
             </span>
             <span className="ml-2 text-xs text-zinc-500 hidden sm:inline">
@@ -68,7 +68,7 @@ export default function MatchCard({ match }: MatchCardProps) {
           </div>
 
           {/* Score */}
-          <div className="flex items-center gap-2 font-mono text-lg font-bold tabular-nums">
+          <div className={`flex items-center gap-2 font-mono font-bold tabular-nums ${isLive ? "text-xl" : "text-lg"}`}>
             {hasScore ? (
               <>
                 <span className="text-zinc-100">{match.home_score}</span>
@@ -85,7 +85,7 @@ export default function MatchCard({ match }: MatchCardProps) {
             <span className="text-xs text-zinc-500 hidden sm:inline mr-2">
               {match.away_team}
             </span>
-            <span className="text-sm font-semibold text-zinc-100">
+            <span className="text-sm font-bold text-zinc-100 tracking-wide">
               {match.away_code}
             </span>
           </div>

@@ -77,7 +77,7 @@ export default function ReactionBar({
   }, []);
 
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-4 gap-2.5">
       {reactions.map((reaction, index) => {
         const label =
           locale === "es" ? reaction.label_es : reaction.label_en;
@@ -99,19 +99,19 @@ export default function ReactionBar({
             <button
               onClick={() => handleReaction(reaction, index)}
               disabled={isDisabled}
-              className={`relative flex flex-col items-center gap-1 w-full rounded-xl bg-zinc-800/60 p-3 transition active:scale-90 ${
+              className={`relative flex flex-col items-center gap-1.5 w-full rounded-xl bg-zinc-800/60 border p-3 transition-transform duration-100 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none ${
                 isDisabled
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-zinc-700/60"
+                  ? "animate-pulse-opacity border-zinc-700/20 cursor-not-allowed"
+                  : "border-zinc-700/30 hover:border-zinc-600/50 hover:bg-zinc-700/60 active:scale-90"
               }`}
             >
               {/* Sponsored indicator */}
               {reaction.sponsor_id && (
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-orange-500" />
+                <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-orange-500 ring-2 ring-zinc-900" />
               )}
 
-              <span className="text-2xl leading-none">{reaction.emoji}</span>
-              <span className="text-[10px] font-medium text-zinc-400 leading-tight truncate w-full text-center">
+              <span className="text-3xl leading-none">{reaction.emoji}</span>
+              <span className="text-[11px] font-medium text-zinc-400 leading-tight truncate w-full text-center">
                 {label}
               </span>
             </button>

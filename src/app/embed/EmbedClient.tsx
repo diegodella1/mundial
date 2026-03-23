@@ -61,9 +61,9 @@ export default function EmbedClient() {
   useEffect(() => {
     if (theme === "light") {
       document.body.classList.remove("bg-zinc-950", "text-white");
-      document.body.classList.add("bg-white", "text-zinc-900");
+      document.body.classList.add("bg-gray-50", "text-gray-900");
     } else {
-      document.body.classList.remove("bg-white", "text-zinc-900");
+      document.body.classList.remove("bg-gray-50", "text-gray-900");
       document.body.classList.add("bg-zinc-950", "text-white");
     }
   }, [theme]);
@@ -128,12 +128,12 @@ export default function EmbedClient() {
   const showReactions = view === "reactions" || view === "both";
 
   return (
-    <div className="flex flex-col h-screen p-3 gap-2">
+    <div className="flex flex-col h-screen p-3 gap-3">
       {/* Match score header */}
       {match && (
         <div className="text-center shrink-0">
           {/* Status */}
-          <div className="flex items-center justify-center gap-2 text-xs mb-1">
+          <div className="flex items-center justify-center gap-2 text-xs mb-1.5">
             {isLive && (
               <span className="flex items-center gap-1.5 font-bold text-red-500">
                 <span className="relative flex h-2 w-2">
@@ -146,7 +146,7 @@ export default function EmbedClient() {
               </span>
             )}
             {isFinished && (
-              <span className={`font-bold uppercase ${isLight ? "text-zinc-500" : "text-zinc-400"}`}>
+              <span className={`font-bold uppercase ${isLight ? "text-gray-500" : "text-zinc-400"}`}>
                 {labels.final}
               </span>
             )}
@@ -154,21 +154,21 @@ export default function EmbedClient() {
 
           {/* Score */}
           <div className="flex items-center justify-center gap-3">
-            <span className={`text-lg font-bold tracking-wide ${isLight ? "text-zinc-800" : "text-zinc-100"}`}>
+            <span className={`text-lg font-bold tracking-wide ${isLight ? "text-gray-800" : "text-zinc-100"}`}>
               {match.home_code}
             </span>
             <span className="font-mono text-2xl font-bold tabular-nums">
               {hasScore ? (
                 <>
-                  <span className={isLight ? "text-zinc-800" : "text-zinc-100"}>{match.home_score}</span>
-                  <span className={isLight ? "text-zinc-400" : "text-zinc-600"}> - </span>
-                  <span className={isLight ? "text-zinc-800" : "text-zinc-100"}>{match.away_score}</span>
+                  <span className={isLight ? "text-gray-800" : "text-zinc-100"}>{match.home_score}</span>
+                  <span className={isLight ? "text-gray-400" : "text-zinc-600"}> - </span>
+                  <span className={isLight ? "text-gray-800" : "text-zinc-100"}>{match.away_score}</span>
                 </>
               ) : (
-                <span className={isLight ? "text-zinc-400" : "text-zinc-600"}>{labels.vs}</span>
+                <span className={isLight ? "text-gray-400" : "text-zinc-600"}>{labels.vs}</span>
               )}
             </span>
-            <span className={`text-lg font-bold tracking-wide ${isLight ? "text-zinc-800" : "text-zinc-100"}`}>
+            <span className={`text-lg font-bold tracking-wide ${isLight ? "text-gray-800" : "text-zinc-100"}`}>
               {match.away_code}
             </span>
           </div>
@@ -184,13 +184,15 @@ export default function EmbedClient() {
 
       {/* Active counter */}
       {showReactions && (
-        <div className="text-center shrink-0">
-          <p className={`text-sm font-medium ${isLight ? "text-zinc-600" : "text-zinc-400"}`}>
-            <span className={`text-lg font-bold ${isLight ? "text-zinc-800" : "text-white"}`}>
+        <div className="shrink-0">
+          <div className={`text-center rounded-xl px-4 py-3 ${isLight ? "bg-white border border-gray-200" : "bg-zinc-900 border border-zinc-800/50"}`}>
+            <p className={`text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500`}>
               {mapState.totalActive.toLocaleString(lang === "es" ? "es-AR" : "en-US")}
-            </span>
-            {" "}{labels.people}
-          </p>
+            </p>
+            <p className={`text-sm mt-0.5 ${isLight ? "text-gray-500" : "text-zinc-400"}`}>
+              {labels.people}
+            </p>
+          </div>
         </div>
       )}
 
@@ -200,10 +202,10 @@ export default function EmbedClient() {
           href="https://mundial.diegodella.ar"
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-[10px] ${isLight ? "text-zinc-400 hover:text-zinc-600" : "text-zinc-600 hover:text-zinc-400"} transition-colors`}
+          className={`text-[11px] ${isLight ? "text-gray-400 hover:text-gray-600" : "text-zinc-500 hover:text-zinc-300"} transition-colors`}
         >
           {labels.poweredBy}{" "}
-          <span className="font-semibold">Matchfeel</span>
+          <span className="font-semibold hover:underline">Matchfeel</span>
         </a>
       </div>
     </div>

@@ -102,30 +102,32 @@ export default function PushSubscribeButton() {
 
   if (state === "denied") {
     return (
-      <p className="text-xs text-zinc-500">
-        Notificaciones bloqueadas. Habilitalo desde la config del navegador.
-      </p>
+      <div className="bg-zinc-900 border border-zinc-800/50 rounded-lg px-4 py-3">
+        <p className="text-xs text-zinc-500">
+          Notificaciones bloqueadas. Habilitalo desde la config del navegador.
+        </p>
+      </div>
     );
   }
 
   if (state === "loading") {
     return (
-      <button
-        disabled
-        className="rounded-lg bg-zinc-700 px-4 py-2 text-sm text-zinc-400"
-      >
-        Cargando...
-      </button>
+      <div className="h-[42px] rounded-lg bg-zinc-800 animate-pulse" />
     );
   }
 
   if (state === "subscribed") {
     return (
       <div className="flex items-center gap-3">
-        <span className="text-sm text-emerald-400">Notificaciones activadas</span>
+        <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-full text-sm font-medium">
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          Notificaciones activadas
+        </span>
         <button
           onClick={unsubscribe}
-          className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs text-zinc-400 transition hover:bg-zinc-700 hover:text-white"
+          className="text-zinc-500 hover:text-zinc-300 text-xs transition-colors focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 outline-none rounded"
         >
           Desactivar
         </button>
@@ -136,9 +138,9 @@ export default function PushSubscribeButton() {
   return (
     <button
       onClick={subscribe}
-      className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition hover:bg-zinc-200"
+      className="bg-white text-zinc-900 font-semibold rounded-lg px-4 py-2.5 text-sm transition-all hover:bg-zinc-100 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 outline-none"
     >
-      Activar notificaciones
+      🔔 Activar notificaciones
     </button>
   );
 }
