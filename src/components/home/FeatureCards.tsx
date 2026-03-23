@@ -3,47 +3,45 @@
 import { useTranslations } from "next-intl";
 
 const features = [
-  { icon: "\u{1F5FA}\uFE0F", key: "featureLiveMap", descKey: "featureLiveMapDesc" },
-  { icon: "\u26BD", key: "featureReactions", descKey: "featureReactionsDesc" },
-  { icon: "\u{1F9FE}", key: "featureReceipt", descKey: "featureReceiptDesc" },
-] as const;
+  { icon: "\uD83D\uDDFA\uFE0F", titleKey: "featureLiveMap" as const, descKey: "featureLiveMapDesc" as const },
+  { icon: "\u26BD", titleKey: "featureReactions" as const, descKey: "featureReactionsDesc" as const },
+  { icon: "\uD83E\uDDFE", titleKey: "featureReceipt" as const, descKey: "featureReceiptDesc" as const },
+  { icon: "\uD83D\uDCAC", titleKey: "featureChat" as const, descKey: "featureChatDesc" as const },
+];
 
 export default function FeatureCards() {
   const t = useTranslations("home");
 
   return (
-    <section className="relative px-6 py-20 overflow-hidden">
-      {/* Section headline */}
-      <h2 className="text-center text-2xl sm:text-3xl font-bold text-zinc-100 mb-12 max-w-[600px] mx-auto leading-snug">
-        {t("statsHeadline")}
-      </h2>
+    <section className="bg-white py-20 px-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Section headline */}
+        <h2 className="text-center text-3xl sm:text-4xl font-bold text-zinc-900 mb-14">
+          {t("featuresTitle")}
+        </h2>
 
-      {/* Cards — horizontal scroll on mobile, grid on desktop */}
-      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:pb-0 max-w-3xl mx-auto scrollbar-hide">
-        {features.map(({ icon, key, descKey }) => (
-          <div
-            key={key}
-            className="flex-shrink-0 w-[280px] sm:w-auto snap-center group"
-          >
-            <div className="relative h-full rounded-2xl border border-zinc-800/60 bg-zinc-900/60 backdrop-blur-sm p-6 transition-all duration-300 hover:border-zinc-700/60 hover:bg-zinc-800/40 hover:shadow-[0_0_30px_rgba(249,115,22,0.06)]">
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {features.map(({ icon, titleKey, descKey }) => (
+            <div
+              key={titleKey}
+              className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 hover:border-orange-300/60 hover:shadow-md transition-all duration-200"
+            >
               {/* Icon */}
-              <div className="text-3xl mb-4">{icon}</div>
+              <div className="text-4xl mb-4">{icon}</div>
 
               {/* Title */}
-              <h3 className="text-lg font-bold text-zinc-100 mb-2">
-                {t(key)}
+              <h3 className="text-lg font-bold text-zinc-900 mb-2">
+                {t(titleKey)}
               </h3>
 
               {/* Description */}
-              <p className="text-sm text-zinc-400 leading-relaxed">
+              <p className="text-sm text-zinc-600 leading-relaxed">
                 {t(descKey)}
               </p>
-
-              {/* Subtle gradient accent on hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/0 to-pink-500/0 group-hover:from-orange-500/[0.03] group-hover:to-pink-500/[0.03] transition-all duration-300 pointer-events-none" />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

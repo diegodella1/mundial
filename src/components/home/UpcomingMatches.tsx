@@ -21,23 +21,19 @@ function getRelativeDay(kickoff: string, t: ReturnType<typeof useTranslations<"h
 
 export default function UpcomingMatches({ matches }: UpcomingMatchesProps) {
   const t = useTranslations("home");
-  const tFixture = useTranslations("fixture");
   const locale = useLocale();
 
   if (matches.length === 0) return null;
 
-  const display = matches.slice(0, 5);
+  const display = matches.slice(0, 10);
 
   return (
-    <section className="relative px-6 py-16">
-      <div className="max-w-2xl mx-auto">
+    <section id="upcoming" className="relative bg-zinc-950 py-20 px-6 scroll-mt-4">
+      <div className="max-w-3xl mx-auto">
         {/* Section header */}
-        <div className="flex items-center gap-3 mb-8">
-          <h2 className="text-xl font-bold text-zinc-100">
-            {t("upcomingTitle")}
-          </h2>
-          <div className="flex-1 h-px bg-zinc-800/60" />
-        </div>
+        <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 text-center mb-12">
+          {t("upcomingTitle")}
+        </h2>
 
         {/* Match list */}
         <div className="space-y-3">
@@ -49,30 +45,43 @@ export default function UpcomingMatches({ matches }: UpcomingMatchesProps) {
               hour12: false,
             });
             const dateStr = kickoffDate.toLocaleDateString(locale === "es" ? "es-AR" : "en-US", {
+              weekday: "short",
               day: "numeric",
               month: "short",
             });
 
             return (
               <Link key={match.id} href={`/${locale}/match/${match.id}`}>
-                <div className="flex items-center gap-4 rounded-xl border border-zinc-800/50 bg-zinc-900/60 backdrop-blur-sm p-4 hover:bg-zinc-800/60 hover:border-zinc-700/50 active:scale-[0.98] transition-all duration-150 cursor-pointer">
+                <div className="flex items-center gap-4 rounded-2xl border border-zinc-800/50 bg-zinc-900/80 backdrop-blur-sm p-5 hover:bg-zinc-800/60 hover:border-zinc-700/50 active:scale-[0.98] transition-all duration-150 cursor-pointer">
                   {/* Date/time */}
-                  <div className="flex-shrink-0 w-16 text-center">
-                    <div className="text-xs text-zinc-500">{dateStr}</div>
-                    <div className="text-sm font-mono font-semibold text-zinc-300">{timeStr}</div>
+                  <div className="flex-shrink-0 w-20 text-center">
+                    <div className="text-xs text-zinc-500 capitalize">{dateStr}</div>
+                    <div className="text-lg font-mono font-bold text-zinc-200">{timeStr}</div>
                   </div>
 
+                  {/* Divider */}
+                  <div className="w-px h-10 bg-zinc-800" />
+
                   {/* Teams */}
-                  <div className="flex-1 flex items-center justify-center gap-3">
-                    <span className="text-sm font-bold text-zinc-100 tracking-wide">{match.home_code}</span>
-                    <span className="text-xs text-zinc-600">vs</span>
-                    <span className="text-sm font-bold text-zinc-100 tracking-wide">{match.away_code}</span>
+                  <div className="flex-1 flex flex-col items-center gap-1">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-bold text-zinc-100 tracking-wide">{match.home_code}</span>
+                      <span className="text-xs text-zinc-600 font-medium">vs</span>
+                      <span className="text-sm font-bold text-zinc-100 tracking-wide">{match.away_code}</span>
+                    </div>
+                    <div className="text-xs text-zinc-500">
+                      {match.home_team} vs {match.away_team}
+                    </div>
                   </div>
 
                   {/* Group & relative time */}
                   <div className="flex-shrink-0 text-right">
-                    <div className="text-xs text-zinc-500">{match.group_name ?? match.round ?? ""}</div>
-                    <div className="text-xs text-orange-400/80 font-medium">
+                    {(match.group_name || match.round) && (
+                      <div className="text-xs font-semibold text-orange-400/90 uppercase tracking-wider mb-1">
+                        {match.group_name ?? match.round}
+                      </div>
+                    )}
+                    <div className="text-xs text-zinc-500">
                       {getRelativeDay(match.kickoff_at, t)}
                     </div>
                   </div>
@@ -83,7 +92,7 @@ export default function UpcomingMatches({ matches }: UpcomingMatchesProps) {
         </div>
 
         {/* View all link */}
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <span className="text-sm text-zinc-500 cursor-default">
             {t("viewAllMatches")} &rarr;
           </span>
