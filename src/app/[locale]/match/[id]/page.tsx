@@ -67,6 +67,7 @@ export default async function MatchPage({
           reactions={(reactions as ReactionConfig[]) ?? []}
           initialTeamCode={userTeamCode}
           isLoggedIn={!!user}
+          chatEnabled={match.chat_enabled !== false}
         />
       </div>
     </div>
