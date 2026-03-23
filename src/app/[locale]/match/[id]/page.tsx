@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 import type { Match } from "@/lib/matches";
 import MatchPageClient from "./MatchPageClient";
 import MatchHero from "@/components/match/MatchHero";
@@ -10,6 +11,59 @@ interface ReactionConfig {
   label_es: string;
   label_en: string;
   sponsor_id: string | null;
+}
+
+const siteUrl = "https://mundial.diegodella.ar";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+  const { locale, id } = await params;
+  const supabase = await createClient();
+
+  const { data: match } = await supabase
+    .from("matches")
+    .select("home_code, away_code, home_team, away_team, group_name")
+    .eq("id", id)
+    .single();
+
+  if (!match) {
+    return { title: "Partido no encontrado — Matchfeel" };
+  }
+
+  const title = `${match.home_code} vs ${match.away_code} — Matchfeel`;
+  const description =
+    locale === "es"
+      ? `${match.home_team} vs ${match.away_team}${match.group_name ? ` — ${match.group_name}` : ""} | Reacciones en vivo del Mundial 2026`
+      : `${match.home_team} vs ${match.away_team}${match.group_name ? ` — ${match.group_name}` : ""} | Live reactions from the 2026 World Cup`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/${locale}/match/${id}`,
+      siteName: "Matchfeel",
+      type: "website",
+      images: [
+        {
+          url: `${siteUrl}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${siteUrl}/og-image.png`],
+    },
+  };
 }
 
 export default async function MatchPage({

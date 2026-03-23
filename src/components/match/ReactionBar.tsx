@@ -128,7 +128,7 @@ export default function ReactionBar({
   return (
     <>
       {showCountryPicker && (
-        <CountryPicker onSelect={handleCountrySelect} />
+        <CountryPicker onSelect={handleCountrySelect} onClose={() => setShowCountryPicker(false)} />
       )}
 
       <div className="grid grid-cols-4 gap-2.5">

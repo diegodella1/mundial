@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 interface AggregateRow {
   country_code: string;
@@ -13,6 +14,7 @@ interface MapState {
 }
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
+let channel: RealtimeChannel | null = null;
 
 async function runAggregation() {
   try {
@@ -45,15 +47,14 @@ async function runAggregation() {
       ts: Date.now(),
     };
 
-    // Broadcast to Realtime channel
-    const channel = supabaseAdmin.channel("map_state");
-    await channel.send({
-      type: "broadcast",
-      event: "update",
-      payload,
-    });
-
-    supabaseAdmin.removeChannel(channel);
+    // Broadcast to the reused channel
+    if (channel) {
+      await channel.send({
+        type: "broadcast",
+        event: "update",
+        payload,
+      });
+    }
   } catch (err) {
     console.error("[aggregation-cron] Unexpected error:", err);
   }
@@ -61,6 +62,11 @@ async function runAggregation() {
 
 export function startAggregationCron() {
   if (intervalId) return; // Already running
+
+  // Create channel once and reuse it
+  channel = supabaseAdmin.channel("map_state");
+  channel.subscribe();
+
   console.log("[aggregation-cron] Started (every 5s)");
   intervalId = setInterval(runAggregation, 5_000);
 }
@@ -69,6 +75,10 @@ export function stopAggregationCron() {
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
-    console.log("[aggregation-cron] Stopped");
   }
+  if (channel) {
+    supabaseAdmin.removeChannel(channel);
+    channel = null;
+  }
+  console.log("[aggregation-cron] Stopped");
 }
