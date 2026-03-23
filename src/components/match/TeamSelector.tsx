@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
-import { codeToFlag } from "@/lib/flags";
+import Flag from "@/components/ui/Flag";
 
 interface TeamSelectorProps {
   matchId: string;
@@ -60,7 +60,7 @@ export default function TeamSelector({
           disabled={loading}
           className="flex flex-col items-center justify-center gap-2 rounded-xl bg-zinc-800/80 border border-zinc-700/50 py-6 px-4 min-h-[80px] transition-all duration-150 hover:bg-zinc-700/80 hover:border-zinc-600/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none"
         >
-          <span className="text-4xl">{codeToFlag(homeCode)}</span>
+          <Flag code={homeCode} size="xl" />
           <span className="text-3xl font-bold text-zinc-100">{homeCode}</span>
           <span className="text-sm text-zinc-400">{homeTeam}</span>
         </button>
@@ -70,7 +70,7 @@ export default function TeamSelector({
           disabled={loading}
           className="flex flex-col items-center justify-center gap-2 rounded-xl bg-zinc-800/80 border border-zinc-700/50 py-6 px-4 min-h-[80px] transition-all duration-150 hover:bg-zinc-700/80 hover:border-zinc-600/50 hover:scale-[1.02] active:scale-95 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 focus-visible:outline-none"
         >
-          <span className="text-4xl">{codeToFlag(awayCode)}</span>
+          <Flag code={awayCode} size="xl" />
           <span className="text-3xl font-bold text-zinc-100">{awayCode}</span>
           <span className="text-sm text-zinc-400">{awayTeam}</span>
         </button>

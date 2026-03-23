@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Match } from "@/lib/matches";
 import MatchPageClient from "./MatchPageClient";
+import MatchHero from "@/components/match/MatchHero";
 
 interface ReactionConfig {
   id: string;
@@ -67,8 +68,12 @@ export default async function MatchPage({
 
   return (
     <div className="flex flex-col min-h-screen pt-14">
-      {/* Top 30%: transparent area (map shows through) */}
-      <div className="h-[30vh] flex-shrink-0" />
+      {/* Top hero: team flags + realtime emoji bubbles */}
+      <MatchHero
+        matchId={(match as Match).id}
+        homeCode={(match as Match).home_code}
+        awayCode={(match as Match).away_code}
+      />
 
       {/* Bottom 70%: match content */}
       <div className="flex-1 bg-zinc-950/90 backdrop-blur-lg rounded-t-3xl px-4 py-6">

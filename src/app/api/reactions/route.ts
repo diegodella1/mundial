@@ -108,6 +108,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Insert failed" }, { status: 500 });
   }
 
-  // 8. Success
+  // 8. Broadcast reaction to match channel for real-time hero bubbles
+  supabaseAdmin.channel(`match_${match_id}`).send({
+    type: "broadcast",
+    event: "reaction",
+    payload: { emoji: reaction_type, team_supported: team_supported || null, country_code },
+  }).catch(() => {
+    // Non-critical: don't fail the request if broadcast fails
+  });
+
+  // 9. Success
   return NextResponse.json({ ok: true }, { status: 201 });
 }

@@ -1,6 +1,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { Match } from "@/lib/matches";
-import { codeToFlag } from "@/lib/flags";
+import Flag from "@/components/ui/Flag";
 
 interface ScoreHeaderProps {
   match: Match;
@@ -36,7 +36,7 @@ export default function ScoreHeader({ match }: ScoreHeaderProps) {
           <span className="text-xl font-bold text-zinc-100 tracking-widest uppercase">
             {match.home_code}
           </span>
-          <span className="text-2xl">{codeToFlag(match.home_code)}</span>
+          <Flag code={match.home_code} size="lg" />
         </div>
 
         <div className="flex items-center gap-3 font-mono tabular-nums min-w-[120px] justify-center">
@@ -52,7 +52,7 @@ export default function ScoreHeader({ match }: ScoreHeaderProps) {
         </div>
 
         <div className="flex-1 flex items-center justify-start gap-2">
-          <span className="text-2xl">{codeToFlag(match.away_code)}</span>
+          <Flag code={match.away_code} size="lg" />
           <span className="text-xl font-bold text-zinc-100 tracking-widest uppercase">
             {match.away_code}
           </span>

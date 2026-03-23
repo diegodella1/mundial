@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import type { Match } from "@/lib/matches";
-import { codeToFlag } from "@/lib/flags";
+import Flag from "@/components/ui/Flag";
 
 interface MatchesClientProps {
   matches: Match[];
@@ -304,8 +304,8 @@ function MatchCard({
           <div className="flex-1 min-w-0">
             {/* Home team row */}
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-base flex-shrink-0">
-                {codeToFlag(match.home_code)}
+              <span className="flex-shrink-0">
+                <Flag code={match.home_code} size="sm" />
               </span>
               <span className="text-xs font-bold text-zinc-500 w-8 flex-shrink-0">
                 {match.home_code}
@@ -325,8 +325,8 @@ function MatchCard({
             </div>
             {/* Away team row */}
             <div className="flex items-center gap-2">
-              <span className="text-base flex-shrink-0">
-                {codeToFlag(match.away_code)}
+              <span className="flex-shrink-0">
+                <Flag code={match.away_code} size="sm" />
               </span>
               <span className="text-xs font-bold text-zinc-500 w-8 flex-shrink-0">
                 {match.away_code}
@@ -404,7 +404,7 @@ function TeamPickButton({ code, matchId }: { code: string; matchId: string }) {
           : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 border border-zinc-200"
       }`}
     >
-      <span className="text-sm">{codeToFlag(code)}</span>
+      <Flag code={code} size="sm" />
       {code}
     </button>
   );

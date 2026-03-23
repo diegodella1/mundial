@@ -78,6 +78,24 @@
   animation: slide-down 0.3s cubic-bezier(0.7, 0, 0.84, 0) forwards;
 }
 
+@keyframes bubble-up {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.6);
+  }
+}
+.animate-bubble-up {
+  animation: bubble-up 1.8s ease-out forwards;
+}
+
 /* Hero section animations */
 @keyframes gradient-shimmer {
   0% {

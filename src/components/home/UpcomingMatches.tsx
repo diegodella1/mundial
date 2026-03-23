@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import type { Match } from "@/lib/matches";
-import { codeToFlag } from "@/lib/flags";
+import Flag from "@/components/ui/Flag";
 
 interface UpcomingMatchesProps {
   matches: Match[];
@@ -66,11 +66,11 @@ export default function UpcomingMatches({ matches }: UpcomingMatchesProps) {
                   {/* Teams */}
                   <div className="flex-1 flex flex-col items-center gap-1">
                     <div className="flex items-center gap-3">
-                      <span className="text-base">{codeToFlag(match.home_code)}</span>
+                      <Flag code={match.home_code} size="sm" />
                       <span className="text-sm font-bold text-zinc-100 tracking-wide">{match.home_code}</span>
                       <span className="text-xs text-zinc-600 font-medium">vs</span>
                       <span className="text-sm font-bold text-zinc-100 tracking-wide">{match.away_code}</span>
-                      <span className="text-base">{codeToFlag(match.away_code)}</span>
+                      <Flag code={match.away_code} size="sm" />
                     </div>
                     <div className="text-xs text-zinc-500">
                       {match.home_team} vs {match.away_team}
