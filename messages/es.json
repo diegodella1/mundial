@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "Matchfeel",
+    "tagline": "Sentí el mundo en tiempo real",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "comingSoon": "Próximamente"
+  },
+  "fixture": {
+    "live": "EN VIVO",
+    "upcoming": "PRÓXIMOS",
+    "finished": "FINALIZADOS",
+    "noMatches": "No hay partidos programados"
+  },
+  "match": {
+    "chooseTeam": "¿A quién apoyás?",
+    "reactionsTitle": "Reacciones",
+    "chat": "Chat",
+    "events": "Eventos",
+    "minute": "min"
+  },
+  "home": {
+    "activeNow": "{count} personas reaccionando ahora",
+    "worldCup": "Mundial 2026"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "Matchfeel",
+    "tagline": "Feel the world in real time",
+    "login": "Sign in",
+    "logout": "Sign out",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "comingSoon": "Coming soon"
+  },
+  "fixture": {
+    "live": "LIVE",
+    "upcoming": "UPCOMING",
+    "finished": "FINISHED",
+    "noMatches": "No matches scheduled"
+  },
+  "match": {
+    "chooseTeam": "Who are you supporting?",
+    "reactionsTitle": "Reactions",
+    "chat": "Chat",
+    "events": "Events",
+    "minute": "min"
+  },
+  "home": {
+    "activeNow": "{count} people reacting now",
+    "worldCup": "World Cup 2026"
+  }
+}
