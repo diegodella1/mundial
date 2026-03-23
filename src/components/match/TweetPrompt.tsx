@@ -114,7 +114,7 @@ export default function TweetPrompt({
     prevCountRef.current = reactionCount;
 
     // Only show every 3rd reaction
-    if (reactionCount % 3 !== 0) return;
+    // Show on every reaction
 
     if (!isEnabled() || !lastReaction) return;
 
